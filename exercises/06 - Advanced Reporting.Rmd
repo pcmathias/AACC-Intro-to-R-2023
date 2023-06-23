@@ -1,9 +1,8 @@
 ---
-title: "COVID-19 Dashboard"
+title: "Chemistry Dashboard"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
-    vertical_layout: fill
 ---
 
 ```{r setup, include=FALSE}
@@ -11,36 +10,43 @@ library(flexdashboard)
 library(tidyverse)
 
 
-covid_testing <- read_csv("covid_testing.csv")
+biochem <- read_csv("biochem_long.csv")
+lyte_data <- biochem |> 
+  filter(test %in% c('sodium_mmol_l', 'potassium_mmol_l', 'chloride_mmol_l', 'bicarbonate_mmol_l'))
 ```
 
 Column {data-width=650}
 -----------------------------------------------------------------------
 
-### Test Volumes Over Time
+### Distributions for Electrolyte Results
 
 ```{r, fig.width=10}
-ggplot(data = covid_testing, mapping = aes(x = pan_day)) +
-  geom_bar(stat = "count")
+ggplot(data = lyte_data) +
+  geom_histogram(mapping = aes(x = value), bins = 50) +
+  facet_grid(cols = vars(test), rows = vars(gender), scales = "free")
 ```
 
 Column {data-width=350}
 -----------------------------------------------------------------------
 
-### In Lab Turnaround Times
+### Age Distribution of Patients
 
 ```{r}
-ggplot(covid_testing) +
-  geom_point(mapping = aes(x = pan_day, y = rec_ver_tat)) +
-  ylim(0, 50)
+patient_list <- biochem |> 
+  group_by(mrn, last_name, gender, age, pregnancy_status_at_exam) |> 
+  summarize(num_tests = n())
+ggplot(patient_list, aes(x = age)) + 
+  geom_histogram(binwidth = 1)
 ```
 
-### Distribution of Cycle Threshold Values
+### Cholesterol-Glucose Comparison
 
 ```{r}
-covid_positive <- covid_testing %>%
-  filter(result == "positive")
-ggplot(data = covid_positive, mapping = aes(x = ct_value)) +
-  geom_histogram(binwidth = 1)
+chol_gluc_comparison <- biochem |> 
+  filter(test %in% c('cholesterol_refrigerated_serum_mg_d_l', 'glucose_refrigerated_serum_mg_d_l')) |> 
+  select(mrn, gender, age, pregnancy_status_at_exam, test, value) |> 
+  pivot_wider(names_from = test, values_from = value)
+ggplot(data = chol_gluc_comparison) +
+  geom_point(aes(x = cholesterol_refrigerated_serum_mg_d_l, y = glucose_refrigerated_serum_mg_d_l))
 ```
 

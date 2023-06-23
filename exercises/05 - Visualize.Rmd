@@ -3,25 +3,69 @@ title: "Visualize Data"
 output: html_notebook
 ---
 
-### Your Turn 4: The ggplot template and aesthetics
-
-Run the following code chunk to import the COVID19 data.
+Run the following code chunk to import the a clean set of data. We will create a subset containing potassium values.
 
 ```{r, warning = FALSE, message = FALSE}
 library(tidyverse)
 
-covid_testing <- read_csv("covid_testing.csv") 
+biochem <- read_csv("biochem_long.csv")
 ```
 
+## Your Turn 1: Refresher on data manipulation
+
+Our chemistry data set includes results for a number of analytes but we would like to focus on a subset of the data for this lesson. You will want to create a subset of the the data based on the *test* variable so we are going to start by using the `count()` function will do a group by and summarize to count the number of rows for a given variable(s). This can be a quick way to see the observations if your variable is represented as text and not a factor.
+
+```{r}
+# get a summary of the various tests included in the data frame
+count(biochem, test)
+```
+
+Create an data frame *k_data* that includes only the potassium observations. Use the `summary()` function to review the potassium data.
+
+```{r}
+k_data <- biochem |> 
+  filter(test == "potassium_mmol_l")
+summary(k_data)
+```
+
+Create a data frame *lyte_data* that includes observations from the electrolytes in a basic metabolic panel (sodium, potassium, chloride, bicarbonate). Recall that you can match on a list using the `%in%` operator and a list of items using the `c()` function: `variable %in% c('item1', 'item2')`. Review the contents of the lyte_data data frame to confirm that you have captured the results of interest. 
+
+```{r}
+lyte_data <- biochem |> 
+  filter(test %in% c('sodium_mmol_l', 'potassium_mmol_l', 'chloride_mmol_l', 'bicarbonate_mmol_l'))
+View(lyte_data)
+```
+
+***************************************************************************************
+********************************                    ***********************************
+********************************     Stop here.     ***********************************
+********************************                    ***********************************
+***************************************************************************************
+
+## Your Turn 3: Creating a ggplot
+
+```{r}
 
 
-Let's recreate the histogram of *pan_day*. 
+```
+
+Does the plot fit the image you were expecting? Why or why not?
+
+***************************************************************************************
+********************************                    ***********************************
+********************************     Stop here.     ***********************************
+********************************                    ***********************************
+***************************************************************************************
+
+## Your Turn 4: The ggplot template and aesthetics
+
+Let's recreate the histogram of potassium results. 
 
 You will need to:
 
-1. Pick a data set: *covid_testing*
+1. Pick a data set: *k_data*
 2. Choose a geom function: *geom_histogram()*
-3. Map aesthetic properties of the graph to variables of the data frame (in this case, the *pan_day* variable should be on the x axis).
+3. Map aesthetic properties of the graph to variables of the data frame (in this case, the *value* variable should be on the x axis).
 
 Fill in the blanks and run the code to create the plot.
 
@@ -32,8 +76,10 @@ ggplot(data = ______) +
   ______(mapping = aes(x = ______))
 ```
 
-
-
+```{r}
+ggplot(data = k_data) +
+  geom_histogram(aes(x = value))
+```
 
 When you run this code, you will most likely have what looks like an error displayed above the graph:
 
@@ -41,7 +87,7 @@ When you run this code, you will most likely have what looks like an error displ
 
 This is actually just a message from R, telling you that it's a bad idea to use a default bin width. 
 
-The *pan_day* variable holds the day of the pandemic (an arbitrary day in late February of 2020) on which the COVID test order was placed. What would be an appropriate binwidth for *pan_day* to see *daily* test volumes?
+The *value* variable holds the quantitative value a given test in this data set. For this specific analyte, what would be an appropriate binwidth for *value* to see a distribution aligned to the likely resolution of the measurements? (Visually inspect the data if you are less familiar with the range of typical potassium values.)
 
 Now fill in the blanks below to recreate the code from the previous chunk, with the *binwidth* argument passed to the *geom_histogram* function. 
 
@@ -51,56 +97,34 @@ ggplot(______) +
 ```
 
 
-
-
 The effect of reducing the bin width (and increasing the number of bins) is that the data is now presented in much greater detail. 
 
 Let's next add some color!
 
-Copy and paste the previous code chunk and add an aesthetic mapping that maps the *fill* aesthetic to the *result* column. (Hint: all aesthetics must be defined *inside* the aes() function!)
+Copy and paste the previous code chunk and add an aesthetic mapping that maps the *fill* aesthetic to the *gender* variable. (Hint: all aesthetics must be defined *inside* the aes() function!)
 
 
 
 
 
-
-
-
-
-
-
-
-
-***************************************************************************************
-***************************************************************************************
-***************************************************************************************
-***************************************************************************************
 ***************************************************************************************
 ********************************                    ***********************************
 ********************************     Stop here.     ***********************************
 ********************************                    ***********************************
 ***************************************************************************************
-***************************************************************************************
-***************************************************************************************
-***************************************************************************************
-***************************************************************************************
 
 
-
-
-
-
-### Your Turn 5: Geom functions
+## Your Turn 5: Geom functions
 
 Run the following code chunk:
 
 ```{r}
-ggplot(data = covid_testing) +
-  geom_histogram(mapping = aes(x = pan_day))
+ggplot(data = k_data) +
+  geom_histogram(mapping = aes(x = value), binwidth = 0.1)
 ```
 
 
-Now try to figure out how you would modify the code above so it draws a frequency polygon instead of histogram. 
+Now try to figure out how you would modify the code above so it draws a frequency polygon instead of histogram. One resource is the ggplot cheatsheet that can be found at 
 
 ```{r}
 
@@ -126,8 +150,38 @@ What do you think the following code will do? Try to predict what you'll see.
 Then run it.
 
 ```{r}
-ggplot(data = covid_testing) +
-  geom_histogram(mapping = aes(x = pan_day)) +
-  geom_freqpoly(mapping = aes(x = pan_day))
+ggplot(data = k_data) +
+  geom_histogram(mapping = aes(x = value), binwidth = 0.1) +
+  geom_freqpoly(mapping = aes(x = value), binwidth = 0.1)
 ```
 
+
+***************************************************************************************
+********************************                    ***********************************
+********************************     Stop here.     ***********************************
+********************************                    ***********************************
+***************************************************************************************
+
+## Your Turn 6: Faceting
+
+Recall that we made a data frame that contains all of the electrolyte data *lyte_data* in the first exercise of this lesson. We would like to visualize the distribution of results in this data set by test and by patient gender. Build a faceted plot for the data frame that separates each gender group into separate rows and each test into separate columns. Use the `scales = "free"` argument to allow each column to use a different scale.
+
+```{r}
+ggplot(data = lyte_data) +
+  geom_histogram(mapping = aes(x = value)) +
+  facet_grid(cols = vars(test), rows = vars(gender), scales = "free")
+```
+
+The histogram shapes have some irregularities. Why might that be? How can you modify the plot to provide a better visualization? Consider that each of the analytes has a different measurement range. What option(s) for your geom function can you use to handle these disparate values?
+
+```{r}
+ggplot(data = lyte_data) +
+  geom_histogram(mapping = aes(x = value), bins = 50) +
+  facet_grid(cols = vars(test), rows = vars(gender), scales = "free")
+```
+
+***************************************************************************************
+********************************                    ***********************************
+********************************     Stop here.     ***********************************
+********************************                    ***********************************
+***************************************************************************************

@@ -34,21 +34,21 @@ filter(biochem, last_name=="maxwell")
 Use the 3 code blocks below, and `filter()`, to show how you would filter the `biochem` dataset.
 
 
-A. You are wanting to confirm a reference interval for women over 50 for alkaline phophatase. Find every test for patients over age 50. The column in which age is found is named `age`. Assign the new data frame to the object `biochem_3a`.
+A. You are wanting to confirm a reference interval for women over 50 for alkaline phophatase. Find every alkaline phosphatase test for female patients aged 50 and over. The column in which age is found is named `age`, gender is found in `gender` and test is in `test`. Assign the new data frame to the object `biochem_3a`.
 ```{r Your Turn 3a, eval=FALSE}
-#replace the ____ with a logical statement identifying tests for patients greater than 80
-biochem_3a_1 <- filter(biochem, age > 50) 
+#replace the ____ with a logical statement identifying tests for patients greater than 50
+biochem_3a_1 <- filter(biochem, age >= 50) 
 biochem_3a_2 <- filter(biochem_3a_1, test == "alkaline_phosphatase_alp_iu_l")
 biochem_3a <- filter(biochem_3a_2, gender == "Female")
 biochem_3a
 ```
 
 
-B. We also would only like to include outpatients? Find all of the alkaline phosphtase testing where the patient type (`demo_group`) is equal to "outpatient". Assign the new data frame to the object `biochem_3b`.
+B. We also would only like to include outpatients? Find all of the alkaline phosphtase testing where the patient type (`pat_type`) is equal to "outpatient". Assign the new data frame to the object `biochem_3b`.
 ```{r Your Turn 3b, eval=FALSE}
 #replace the ____ with a logical statement identifying tests for patients with demo_group equal to "client"
-covid_testing_3b <- filter(covid_testing, ________)
-covid_testing_3b
+biochem_3b <- filter(biochem_3a, pat_type == "outpatient")
+biochem_3b
 ```
 
 ## Filter Bonus Challenge (only if you have time)

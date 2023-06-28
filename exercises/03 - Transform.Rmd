@@ -24,12 +24,12 @@ How can you confirm that you have successfully loaded the data file into Rstudio
 
 ```{r}
 # Filters the biochem testing dataset to just rows in which the mrn column is equal to 111900
-filter(biochem, mrn == 111900)
+filter(biochem, mrn == 121444)
 ```
 
 ```{r}
 # Filters the biochem testing dataset to just rows in which the last_name column is equal to "maxwell"
-filter(biochem, last_name=="maxwell")
+filter(biochem, last_name=="lopez")
 ```
 
 ## Your Turn 2
@@ -41,7 +41,7 @@ A. You are wanting to confirm a reference interval for women over 50 for alkalin
 ```{r Your Turn 3a, eval=FALSE}
 #replace the ____ with a logical statement identifying tests for patients greater than 50
 biochem_3a_1 <- filter(biochem, age >= 50) 
-biochem_3a_2 <- filter(biochem_3a_1, test == "alkaline_phosphatase_alp_iu_l")
+biochem_3a_2 <- filter(biochem_3a_1, test == "alkaline_phosphatase")
 biochem_3a <- filter(biochem_3a_2, gender == "Female")
 biochem_3a
 ```
@@ -117,7 +117,7 @@ Using "<-", assign the result to a new variable, call it whatever you want.
 cc_outliers <- biochem %>% 
   filter(pat_type == "cancer center")%>% # filter to the pat_type with the name "cancer center"
   mutate(total_tat = col_rec_tat + rec_ver_tat) %>% # calculate total turnaround time
-  filter(total_tat > 5)    # filter only turnaround time greater than 10 hours
+  filter(total_tat > 0.5)    # filter only turnaround time greater than 10 hours
 cc_outliers
 ```
 
@@ -184,7 +184,7 @@ How might you use arrange() to determine the highest and lowest Sodium result in
 ```{r your_turn_arrange, eval=FALSE}
 #replace the ____ with the name of the column you would like to arrange the dataframe by.
 biochem_sodium <- biochem %>%
-  filter(test == "sodium_mmol_l") %>%
+  filter(test == "sodium") %>%
   select(value) %>%
   arrange(value) 
 head(biochem_sodium)

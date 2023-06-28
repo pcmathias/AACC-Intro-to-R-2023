@@ -5,6 +5,9 @@ title: "Transform Data"
 ## Your Turn 1
 
 ```{r Your Turn 1, message=FALSE}
+## remove all user defined objects in your workspace
+rm(list=ls())
+
 library(tidyverse)  # Provides functions used throughout this session
 
 biochem <- read_csv("biochem_long.csv") #Read in data
@@ -156,31 +159,38 @@ biochem_2b
 
 If you have extra time try the following challenge:
 
-In the `covid_testing` dataset the turnaround time metrics are labeled `col_rec_tat` and `rec_var_tat`. Your goal is to select just these columns. Using what we learned as well as the dplyr cheatsheet which of the following code snippets could you use to select these columns?
+In the `biochem` dataset the turnaround time metrics are labeled `col_rec_tat` and `rec_var_tat`. Your goal is to select just these columns. Using what we learned as well as the dplyr cheatsheet which of the following code snippets could you use to select these columns?
 
 ```{r select challenge, eval=FALSE}
-select(covid_testing, contains("rec"))
-select(covid_testing, col_rec_tat, rec_ver_tat)
-select(covid_testing, ends_with("tat"))
+select(biochem, contains("rec"))
+select(biochem, col_rec_tat, rec_ver_tat)
+select(biochem, ends_with("tat"))
 
 ```
 
 ## Arrange
 
 ```{r arrange, eval=FALSE}
-arrange(covid_testing, first_name) #Sort in alphabetical order
-arrange(covid_testing, desc(mrn))  #Sort from largest to smallest MRN
+arrange(biochem, last_name) #Sort in alphabetical order
+arrange(biochem, desc(mrn))  #Sort from largest to smallest MRN
 ```
 
 ### Bonus Your Turn - arrange
 
-The column `ct_value` contains the cycle threshold (Ct) for the real-time PCR that generated the final result.
+The column `value` contains the reported result for each test result.
 
-How might you use arrange() to determine the highest and lowest Ct result in the dataset? (Hint: Try sorting the rows by the Ct result value contained in the column named `ct_value`) 
+How might you use arrange() to determine the highest and lowest Sodium result in the dataset? (Hint: Try filtering all `sodium_mmol_l` tests and then using arrange on the `value` column.) 
 
 ```{r your_turn_arrange, eval=FALSE}
 #replace the ____ with the name of the column you would like to arrange the dataframe by.
-arrange(covid_testing, __________)
+biochem_sodium <- biochem %>%
+  filter(test == "sodium_mmol_l") %>%
+  select(value) %>%
+  arrange(value) 
+head(biochem_sodium)
+## head returns the first 6 results in the dataframe
+tail(biochem_sodium)
+## tail returns the last6 results in the dataframe
 ```
 
 ### Pop Quiz

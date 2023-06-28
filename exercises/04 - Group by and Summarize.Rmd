@@ -8,26 +8,28 @@ editor_options:
 ## Setup
 
 ```{r setup}
+## remove all user defined objects in your workspace
+rm(list=ls())
+
 library(tidyverse)  # Provides functions used throughout this session
 
-covid_testing <- read_csv("covid_testing.csv")
+biochem <- read_csv("biochem_wide.csv")
 ```
 
 ## Summarize
 
-### How many tests are performed per day?
+### What is the distribution of sodium results?
 ```{r}
-ggplot(data = covid_testing) +
-  geom_histogram(aes(x = pan_day), binwidth = 1)
+ggplot(data = biochem) +
+  geom_histogram(aes(x = sodium_mmol_l), binwidth = 1)
 ```
 
 
 ```{r}
-covid_testing %>%
-  select(mrn, pan_day) %>%
-  head(4) %>%
+biochem %>%
+  select(mrn, sodium_mmol_l) %>%
 	summarize(order_count = n(),
-	          day_count    = n_distinct(pan_day)) 
+	          day_count  = n_distinct(sodium_mmol_l)) 
 ```
 
 ## Your Turn 1

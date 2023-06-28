@@ -25,7 +25,7 @@ filter(biochem, mrn == 111900)
 ```
 
 ```{r}
-# Filters the biochem testing dataset to just rows in which the last_name column is equal to "stark"
+# Filters the biochem testing dataset to just rows in which the last_name column is equal to "maxwell"
 filter(biochem, last_name=="maxwell")
 ```
 
@@ -53,17 +53,17 @@ biochem_3b
 
 ## Filter Bonus Challenge (only if you have time)
 
-We may have some data anomalies in the data set. Find all of the covid testing where the patient class (column `patient_class`) is not entered. In these cases the value will be NA. NA stands for "not available". It is the way that R codes missing values.  [Hint: See slide titled "Logical Tests"]
+We may have some data anomalies in the data set. Find all of the biochemistry testing where the patient class (column `pat_type`) is not entered. In these cases the value will be NA. NA stands for "not available". It is the way that R codes missing values.  [Hint: See slide titled "Logical Tests"]
 ```{r Your Turn 3c, eval=FALSE}
-covid_testing_3c <- filter(covid_testing, ________)
-covid_testing_3c
+biochem_3c <- filter(biochem, is.na(pat_type))
+biochem_3c
 ```
 
 # mutate
 
 ```{r}
 # The following code creates a data frame with a new column called c_r_tat_mins which contains the collect to receive TAT quantified in minutes.
-mutate(covid_testing, c_r_tat_mins = col_rec_tat*60)
+mutate(biochem, c_r_tat_mins = col_rec_tat*60)
 ```
 
 ## Your Turn 3
@@ -71,30 +71,30 @@ Create a new column using the mutate() function that contains the total TAT.
 Hint: The total TAT is the sum of `col_rec_tat` and `rec_ver_tat`
 
 ```{r Your Turn 6, eval=FALSE}
-mutate(covid_testing, total_tat = _________)
+mutate(biochem, total_tat = 60*(col_rec_tat + rec_ver_tat)) 
 ```
 
 ## Replace a column with `mutate()`
 
 ```{r}
-mutate(covid_testing, mrn = as.character(mrn))
+mutate(biochem, mrn = as.character(mrn))
 ```
 
 # Steps and the pipe
 
 ```{r Steps and the pipe}
 # These 3 lines of code are an example of the how we would accomplish a multi-step analysis based on what we've learned so far. 
-tat_outliers <- filter(covid_testing, patient_class == 'inpatient')
-tat_outliers <- mutate(tat_outliers, total_tat = col_rec_tat + rec_ver_tat)
-tat_outliers <- filter(tat_outliers, total_tat > 18)
+tat_outliers <- filter(biochem, pat_type == 'inpatient')
+tat_outliers <- mutate(tat_outliers, total_tat = 60*col_rec_tat + 60*rec_ver_tat)
+tat_outliers <- filter(tat_outliers, total_tat > 45)
 
 # vs
 
 # This code accomplishes the same task with less code
-tat_outliers <- covid_testing %>% 
-	filter(patient_class == 'inpatient') %>% 
-	mutate(total_tat = col_rec_tat + rec_ver_tat) %>%   
-	filter(total_tat > 18)
+tat_outliers <- biochem %>% 
+	filter(pat_type == 'inpatient') %>% 
+	mutate(total_tat = 60*col_rec_tat + 60*rec_ver_tat) %>%   
+	filter(total_tat > 60)
 
 ```
 
@@ -102,7 +102,7 @@ tat_outliers <- covid_testing %>%
 
 Use `%>%` in the following chunk to write a sequence of functions that: 
 
-1. Filters to tests from the clinic (`clinic_name`) of "picu"
+1. Filters to tests from the patient type (`pat_type`) of "cancer center"
 
 2. Adds a column with the total turnaround time (sum of `col_rec_tat` and `rec_ver_tat`)
 
@@ -111,45 +111,45 @@ Use `%>%` in the following chunk to write a sequence of functions that:
 Using "<-", assign the result to a new variable, call it whatever you want.
 
 ```{r your_turn_4, eval=FALSE}
-picu_outliers <- covid_testing %>% 
-  filter(________) %>% # filter to the clinic with the name "picu"
-  mutate(________) %>% # calculate total turnaround time
-  filter(________)    # filter only turnaround time greater than 10 hours
-picu_outliers
+cc_outliers <- biochem %>% 
+  filter(pat_type == "cancer center")%>% # filter to the pat_type with the name "cancer center"
+  mutate(total_tat = col_rec_tat + rec_ver_tat) %>% # calculate total turnaround time
+  filter(total_tat > 5)    # filter only turnaround time greater than 10 hours
+cc_outliers
 ```
 
 ## Pipe Bonus Challenge (only if you have time)
 
 Use your mouse to select the name of the new data frame from the list of objects in the Environment tab in the upper-right pane of Rstudio. Answer the following questions:
 
-- What is the typical TAT for the PICU?
-- Given this data, does it appear that there is a chronic problem in TAT for the PICU, or was this test an outlier?
+- What is the typical TAT for the Cancer Center?
+- Given this data, does it appear that there is a chronic problem in TAT for the Cancer Center, or was this test an outlier?
 
 # What else?
 
 ## select()
 
 ```{r select}
-select(covid_testing, mrn, last_name)   # select columns to keep
-select(covid_testing, -mrn, -last_name) # select columns to remove 
+select(biochem, mrn, last_name)   # select columns to keep
+select(biochem, -mrn, -last_name) # select columns to remove 
 ```
 
 ### Bonus Your Turn - select
 
-A. Alter the code to select just the `first_name` column. Assign the result to `covid_testing_2a` and show the resulting data frame by executing the following line with just the name of the object: `covid_testing_2a` 
+A. Alter the code to select just the `last_name` column. Assign the result to `biochem_2a` and show the resulting data frame by executing the following line with just the name of the object: `biochem_2a` 
 
 ```{r your_turn_select_a, eval=FALSE}
 # Remove the "_______" and replace it with your answer
-covid_testing_2a <- select(covid_testing, ________)
-covid_testing_2a
+biochem_2a <- select(biochem, last_name)
+biochem_2a
 ```
 
-B. If you have time, alter this line of code and see if you can select all columns EXCEPT the `first_name` column.
+B. If you have time, alter this line of code and see if you can select all columns EXCEPT the `last_name` column.
 
 ```{r your_turn_select_b, eval=FALSE}
 # Remove the "_______" and replace it with your answer
-covid_testing_2b <- select(covid_testing, ________)
-covid_testing_2b
+biochem_2b <- select(biochem, -last_name)
+biochem_2b
 ```
 
 ### Select Bonus Challenge (only if you have time)

@@ -3,20 +3,20 @@ title: "Exercise for 02 - Importing and Exploring Data"
 output: html_document
 ---
 
-## Importing COVID19 data from a CSV file
+## Importing NHANES data from a CSV file
 
-Take a look at the *Files* pane on the bottom right. Note that there is a file named *covid_testing.csv*. The objective of this exercise is to *import* that CSV file into R as a data frame, and then take a first look at its contents using the *Data Viewer*.
+Take a look at the *Files* pane on the bottom right. Note that there is a file named *biochem_wide.csv*. The objective of this exercise is to *import* that CSV file into R as a data frame, and then take a first look at its contents using the *Data Viewer*.
 
 Recall that to import CSV files, we use the *read_csv()* function, which is part of the *tidyverse* package. The *read_csv()* function takes a *filename* as an argument and returns a *data frame*. To capture the data frame in a named object, we use the *assignment operator* ( <- ).
 
-In the following code chunk, we first load the *tidyverse* package and then use the *read_csv()* function to load the *covid_testing.csv* file and capture it in an object named *covid_testing*. 
+In the following code chunk, we first load the *tidyverse* package and then use the *read_csv()* function to load the *biochem_wide.csv* file and capture it in an object named *biochem*. 
 
 Run the following code chunk.
 
 
 ```{r, message = FALSE}
 library(tidyverse)
-covid_testing <- read_csv("covid_testing.csv")
+biochem <- read_csv("biochem_wide.csv")
 ```
 
 Hint: click on the green triangle in the upper right corner of the code chunk!
@@ -28,7 +28,7 @@ One thing that Excel does well is to provide an interactive visual representatio
 
 Look on the right at the *Environment* pane (you might have to click on the "Environment" tab) and find the entry *covid_testing*. This is the data frame you just created inside of R's memory. (If you don't see covid_testing, try running the code chunk above again).
 
-On the far right next to *covid_testing*, you will spot a symbol that looks like a small table. Click on it to make the *Data Viewer* appear.
+On the far right next to *biochem*, you will spot a symbol that looks like a small table. Click on it to make the *Data Viewer* appear.
 
 Without writing any code, just by working with the Data Viewer, try to answer the following questions:
 

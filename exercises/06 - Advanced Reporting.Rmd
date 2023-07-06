@@ -12,7 +12,7 @@ library(tidyverse)
 
 biochem <- read_csv("biochem_long.csv")
 lyte_data <- biochem |> 
-  filter(test %in% c('sodium_mmol_l', 'potassium_mmol_l', 'chloride_mmol_l', 'bicarbonate_mmol_l'))
+  filter(test %in% c('sodium', 'potassium', 'chloride', 'bicarbonate'))
 ```
 
 Column {data-width=650}
@@ -43,10 +43,10 @@ ggplot(patient_list, aes(x = age)) +
 
 ```{r}
 chol_gluc_comparison <- biochem |> 
-  filter(test %in% c('cholesterol_refrigerated_serum_mg_d_l', 'glucose_refrigerated_serum_mg_d_l')) |> 
+  filter(test %in% c('cholesterol', 'glucose')) |> 
   select(mrn, gender, age, pregnancy_status_at_exam, test, value) |> 
   pivot_wider(names_from = test, values_from = value)
 ggplot(data = chol_gluc_comparison) +
-  geom_point(aes(x = cholesterol_refrigerated_serum_mg_d_l, y = glucose_refrigerated_serum_mg_d_l))
+  geom_point(aes(x = cholesterol, y = glucose))
 ```
 

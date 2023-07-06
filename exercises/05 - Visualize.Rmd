@@ -24,7 +24,7 @@ Create an data frame *k_data* that includes only the potassium observations. Use
 
 ```{r}
 k_data <- biochem |> 
-  filter(test == "potassium_mmol_l")
+  filter(_______)
 summary(k_data)
 ```
 
@@ -32,7 +32,7 @@ Create a data frame *lyte_data* that includes observations from the electrolytes
 
 ```{r}
 lyte_data <- biochem |> 
-  filter(test %in% c('sodium_mmol_l', 'potassium_mmol_l', 'chloride_mmol_l', 'bicarbonate_mmol_l'))
+  filter(______ %in% _______)
 View(lyte_data)
 ```
 
@@ -124,7 +124,7 @@ ggplot(data = k_data) +
 ```
 
 
-Now try to figure out how you would modify the code above so it draws a frequency polygon instead of histogram. One resource is the ggplot cheatsheet that can be found at 
+Now try to figure out how you would modify the code above so it draws a frequency polygon instead of histogram. One resource is the ggplot cheatsheet that can be found at [visualization cheatsheet](https://github.com/rstudio/cheatsheets/blob/main/data-visualization.pdf)
 
 ```{r}
 
@@ -175,9 +175,9 @@ ggplot(data = lyte_data) +
 The histogram shapes have some irregularities. Why might that be? How can you modify the plot to provide a better visualization? Consider that each of the analytes has a different measurement range. What option(s) for your geom function can you use to handle these disparate values?
 
 ```{r}
-ggplot(data = lyte_data) +
-  geom_histogram(mapping = aes(x = value), bins = 50) +
-  facet_grid(cols = vars(test), rows = vars(gender), scales = "free")
+ggplot(data = ______) +
+  geom_histogram(mapping = aes(x = ______), ) +
+  facet_grid(cols = vars(______), rows = vars(______), scales = "free")
 ```
 
 ***************************************************************************************

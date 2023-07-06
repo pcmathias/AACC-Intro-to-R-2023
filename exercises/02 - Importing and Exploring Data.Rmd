@@ -3,9 +3,9 @@ title: "Exercise for 02 - Importing and Exploring Data"
 output: html_document
 ---
 
-## Importing COVID19 data from a CSV file
+## Importing NHANES data from a CSV file
 
-Take a look at the *Files* pane on the bottom right. Note that there is a file named *covid_testing.csv*. The objective of this exercise is to *import* that CSV file into R as a data frame, and then take a first look at its contents using the *Data Viewer*.
+Take a look at the *Files* pane on the bottom right. Note that there is a file named *biochem_wide.csv*. The objective of this exercise is to *import* that CSV file into R as a data frame, and then take a first look at its contents using the *Data Viewer*.
 
 Recall that to import CSV files, we use the *read_csv()* function, which is part of the *tidyverse* package. The *read_csv()* function takes a *filename* as an argument and returns a *data frame*. To capture the data frame in a named object, we use the *assignment operator* ( <- ).
 

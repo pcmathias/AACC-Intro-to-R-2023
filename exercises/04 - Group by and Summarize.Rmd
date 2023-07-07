@@ -18,12 +18,14 @@ biochem <- read_csv("biochem_wide.csv")
 
 ## Summarize
 
-### What is the distribution of sodium results?
+### What is the distribution of Alkaline Phosphatase results?
+
 ```{r}
 ggplot(data = biochem) +
   geom_histogram(aes(x = alkaline_phosphatase), binwidth = 1)
 ```
 
+### Summarize the total number of of alkaline phosphatase results.
 
 ```{r}
 biochem %>%
@@ -36,145 +38,113 @@ biochem %>%
 
 Fill in gaps in code below to:
 
-a) Calculate the mean count of orders per `pan_day`
- 
-```{r, eval=FALSE}
-stats_1a <- covid_testing %>%
-	summarize(order_count = n(),
-	          day_count = n_distinct(pan_day),
-	          order_count_mean = _______________)
+a)  Calculate the median alkaline phosphatase concentration and average calcium concentration.
+
+```{r}
+stats_1a <- biochem %>%
+	summarize(test_count = n(),
+	          mean_alp = median(alkaline_phosphatase),
+	          mean_ca = mean(total_calcium))
 stats_1a
 ```
 
-b) Calculate the mean count of orders per clinic
+b)  Calculate the interquartile range for alkaline phosphatase and the standard deviation for calcium. The function for interquartile range is "IQR" and for standard deviation is "sd"
 
-```{r, eval=FALSE}
-stats_1b <- covid_testing %>%
-	summarize(order_count = n(),
-	          clinic_count = ______________),
-	          order_count_mean = _________________)
+```{r}
+stats_1b <- biochem %>%
+	summarize(test_count = n(),
+	          median_alp = median(alkaline_phosphatase),
+	          mean_ca = mean(total_calcium),
+	          iqr_alp = IQR(alkaline_phosphatase),
+	          sd_ca = sd(total_calcium))
 stats_1b
 ```
+## Other examples of summarize
+```{r}
+stats_1c <- biochem %>%
+  summarize(test_count = n(),
+	          lower95_alp = quantile(alkaline_phosphatase, 0.025),
+            upper95_alp = quantile(alkaline_phosphatase, 0.975),
+	          var_alp = var(alkaline_phosphatase),
+	          cv_alp = 100*sd(alkaline_phosphatase)/mean(alkaline_phosphatase))
 
-## Summarize examples
-
-### Last pandemic day (in data)
-```{r, eval=FALSE}
-covid_testing %>%
-  summarize(last_day = ____(pan_day))
 ```
 
-### Median turnaround time
-```{r, eval=FALSE}
-covid_testing %>%
-  mutate(col_ver_tat = col_rec_tat ___ rec_ver_tat) %>%
-  summarize(col_ver_tat_mean = mean(col_ver_tat),
-            col_ver_tat_median = ______(col_ver_tat))
-```
 
 ## Your Turn 2
-Consider: How would you calculate the median number of orders per day?
+
+Consider: How would you calculate the total number of tests performed by patient gender?
 
 ## group_by
 
 ```{r}
-covid_testing %>% 
-  group_by(pan_day)
+biochem %>%
+  select(mrn, gender, pat_type) %>%
+  group_by(gender, pat_type)
 ```
 
-## group_by %>% summarize
+## group_by %\>% summarize
 
 ```{r}
-covid_testing %>%
-	group_by(pan_day) %>%
-	summarize(order_count = n())
+biochem %>%  
+	select(mrn, gender, alkaline_phosphatase) %>%
+  group_by(gender) %>%
+  summarize(test_count = n())
+
 ```
 
 ## Your Turn 3
 
-a) Calculate the median turnaround time for each day
+a)  Calculate the median alkaline phosphatase concentration for Men and Women
 
 ```{r, eval=FALSE}
-covid_testing %>%
-  mutate(col_ver_tat = ________________) %>%
-  group_by(______) %>%
-  summarize(col_ver_tat_median = ___________)
+biochem %>%
+  group_by(gender) %>%
+  summarize(median_alp = median(alkaline_phosphatase))
 ```
 
-b) (*Extra*) The median number of orders per day
+b)  (*Extra*) Calculate the median alkaline phosphatase concentration in Men and Women over 51
 
 ```{r, eval=FALSE}
-covid_testing %>%
-  group_by(_________) %>%
-  summarize(n_orders = __________) %>%
-  summarize(n_orders_median = _____________)
-```
-
-## Group_by %>% Summarize examples
-
-### Number of tests per day
-```{r, eval=FALSE}
-tmp <- covid_testing %>%
-  group_by(pan_day) %>%
-  summarize(n_tests = n())
-
-ggplot(data = tmp) +
-  geom_point(aes(x = _______, y = ______)) +
-  geom_smooth(aes(x = _______, y = _______), method = 'loess') +
-  ylab("# of tests") +
-  xlab("Pandemic day")
+biochem %>%
+  group_by(gender) %>%
+  filter(age > 51) %>%
+  summarize(median_alp = median(alkaline_phosphatase))
 ```
 
 ## What else
 
-### Test for association
-```{r}
-covid_testing_2 <- covid_testing %>%
-  mutate(payor_group_fac = case_when(
-				is.na(payor_group) 			     ~ "unassigned",
-				payor_group %in% c("charity care", 
-						    "medical assistance", 
-						    "self pay", 
-					            "other") 		     ~ "other",
-									TRUE ~ payor_group)
-  ) %>%
-  filter(result %in% c("positive", "negative"))
-```
+### Linear Regression
 
 ```{r}
-# Generate counts
-tmp_table_tall <- covid_testing_2 %>% 
-  group_by(payor_group_fac, result) %>%
-  summarize(n = n()) %>%
-  ungroup()
-tmp_table_tall
+lm.model <- lm(blood_urea_nitrogen ~ creatinine + aspartate_aminotransferase, biochem)
+summary(lm.model)
 
-# Pivot from tall to wide table
-tmp_table_wide <- tmp_table_tall %>%
-  spread(key = "result", value = "n")
-tmp_table_wide
-```
+ggplot(biochem, aes(creatinine, blood_urea_nitrogen)) +
+  geom_point() +
+  xlim(0,3) + 
+  ylim(0,50)+
+  geom_smooth(method="lm", se=FALSE, color="red", formula = y ~ x)
 
-```{r}
-# Hypergeometric test for association
-tmp_table_wide %>%
-  select(-payor_group_fac) %>%
-  fisher.test(simulate.p.value = T)
+lm.model$coefficients
+confint(lm.model)
+
 ```
 
 ### Logistic Regression
+
 ```{r}
-tmp <- covid_testing_2 %>%
-  filter(payor_group_fac %in% c("commercial", "government")) %>%
-  mutate(result_fac = factor(result, 
-                             levels=c("negative", "positive"), 
-                             ordered=T),
-         payor_group_fac = (payor_group == "government"))
-tmp_fit <- glm(result_fac ~ payor_group_fac + age,  	# model formula
-               data = tmp,                           	# dataset
+##converting to F and M to 1 and 0
+biochem2 <- biochem %>%
+  mutate(gender2 = ifelse(gender == "Female", 1, 0)) %>%
+  filter(age > 51) %>%
+  select(-mrn, -pregnancy_status_at_exam, -age, -collect_dt, -receive_dt, -verify_dt, -pat_type, -payor_groups, -last_name, -col_rec_tat, -rec_ver_tat, -gender)
+  
+
+lr.model <- glm(gender2 ~ alkaline_phosphatase + alanine_aminotransferase + aspartate_aminotransferase + gamma_glutamyl_transferase,  	# model formula
+               data = biochem2,                           	# dataset
                family = "binomial"                    # type of model
   )
-summary(tmp_fit)
-exp(coefficients(tmp_fit))  					                # odds
+summary(lr.model)
+exp(coefficients(lr.model))  					                # odds
 ```
-

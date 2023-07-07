@@ -9,7 +9,7 @@ Take a look at the *Files* pane on the bottom right. Note that there is a file n
 
 Recall that to import CSV files, we use the *read_csv()* function, which is part of the *tidyverse* package. The *read_csv()* function takes a *filename* as an argument and returns a *data frame*. To capture the data frame in a named object, we use the *assignment operator* ( <- ).
 
-In the following code chunk, we first load the *tidyverse* package and then use the *read_csv()* function to load the *biochem_wide.csv* file and capture it in an object named *biochem*. 
+In the following code chunk, we first load the *tidyverse* package and then use the *read_csv()* function to load the *biochem_long.csv* file and capture it in an object named *biochem*. 
 
 Run the following code chunk.
 
@@ -28,7 +28,7 @@ One thing that Excel does well is to provide an interactive visual representatio
 
 Look on the right at the *Environment* pane (you might have to click on the "Environment" tab) and find the entry *biochem*. This is the data frame you just created inside of R's memory. (If you don't see biochem, try running the code chunk above again).
 
-On the far right next to *biochem*, you will spot a symbol that looks like a small table. Click on it to make the *Data Viewer* appear.
+Click on the *biochem* entry with your mouse. This will trigger the *Data Viewer* to appear in the upper-left quadrant of your screen. The *Data Viewer* allows you to visually explore your dataframe, much like a spreadsheet. You can learn a lot about a data set by visually inspecting it in this way.
 
 Without writing any code, just by working with the Data Viewer, try to answer the following questions:
 

@@ -8,6 +8,21 @@ title: "Transform Data"
 library(tidyverse)  # Provides functions used throughout this session
 
 biochem <- read_csv("biochem_long.csv") #Read in data
+biochem <- biochem[!duplicated(biochem$mrn),]
+
+biochem1 <- biochem %>%
+  select(mrn, age, last_name)
+biochem2 <- biochem %>%
+  select(MRN=mrn, age, last_name)
+biochem1
+biochem2
+
+biochem_name <- head(biochem1)
+biochem_name2 <- biochem_name %>%
+  arrange(last_name)
+biochem_name3 <- biochem_name %>%
+  arrange(desc(mrn))
+
 ```
 
 How can you confirm that you have successfully loaded the data file into Rstudio?

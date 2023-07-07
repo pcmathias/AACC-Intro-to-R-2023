@@ -21,15 +21,15 @@ biochem <- read_csv("biochem_wide.csv")
 ### What is the distribution of sodium results?
 ```{r}
 ggplot(data = biochem) +
-  geom_histogram(aes(x = sodium_mmol_l), binwidth = 1)
+  geom_histogram(aes(x = alkaline_phosphatase), binwidth = 1)
 ```
 
 
 ```{r}
 biochem %>%
-  select(mrn, sodium_mmol_l) %>%
-	summarize(order_count = n(),
-	          day_count  = n_distinct(sodium_mmol_l)) 
+  select(mrn, alkaline_phosphatase) %>%
+	summarize(test_count = n()) 
+
 ```
 
 ## Your Turn 1

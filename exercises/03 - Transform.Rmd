@@ -15,10 +15,12 @@ biochem <- read_csv("biochem_long.csv") #Read in data
 
 How can you confirm that you have successfully loaded the data file into Rstudio?
 
-	1. The code that imported the data did not yield an error
-	2. Code that references `biochem` object runs without errors
-	3. The `biochem` object is present in the environment pane
-	4. All of the above
+```         
+1. The code that imported the data did not yield an error
+2. Code that references `biochem` object runs without errors
+3. The `biochem` object is present in the environment pane
+4. All of the above
+```
 
 # filter()
 
@@ -29,15 +31,15 @@ filter(biochem, mrn == 121444)
 
 ```{r}
 # Filters the biochem testing dataset to just rows in which the last_name column is equal to "maxwell"
-filter(biochem, last_name=="lopez")
+filter(biochem, last_name=="maxwell")
 ```
 
 ## Your Turn 2
 
 Use the 3 code blocks below, and `filter()`, to show how you would filter the `biochem` dataset.
 
-
 A. You are wanting to confirm a reference interval for women over 50 for alkaline phophatase. Find every alkaline phosphatase test for female patients aged 50 and over. The column in which age is found is named `age`, gender is found in `gender` and test is in `test`. Assign the new data frame to the object `biochem_3a`.
+
 ```{r Your Turn 3a, eval=FALSE}
 #replace the ____ with a logical statement identifying tests for patients greater than 50
 biochem_3a_1 <- filter(biochem, age >= 50) 
@@ -46,8 +48,8 @@ biochem_3a <- filter(biochem_3a_2, gender == "Female")
 biochem_3a
 ```
 
-
 B. We also would only like to include outpatients? Find all of the alkaline phosphtase testing where the patient type (`pat_type`) is equal to "outpatient". Assign the new data frame to the object `biochem_3b`.
+
 ```{r Your Turn 3b, eval=FALSE}
 #replace the ____ with a logical statement identifying tests for patients with demo_group equal to "client"
 biochem_3b <- filter(biochem_3a, pat_type == "outpatient")
@@ -56,7 +58,8 @@ biochem_3b
 
 ## Filter Bonus Challenge (only if you have time)
 
-We may have some data anomalies in the data set. Find all of the biochemistry testing where the patient class (column `pat_type`) is not entered. In these cases the value will be NA. NA stands for "not available". It is the way that R codes missing values.  [Hint: See slide titled "Logical Tests"]
+We may have some data anomalies in the data set. Find all of the biochemistry testing where the patient class (column `pat_type`) is not entered. In these cases the value will be NA. NA stands for "not available". It is the way that R codes missing values. [Hint: See slide titled "Logical Tests"]
+
 ```{r Your Turn 3c, eval=FALSE}
 biochem_3c <- filter(biochem, is.na(pat_type))
 biochem_3c
@@ -70,8 +73,8 @@ mutate(biochem, c_r_tat_mins = col_rec_tat*60)
 ```
 
 ## Your Turn 3
-Create a new column using the mutate() function that contains the total TAT. 
-Hint: The total TAT is the sum of `col_rec_tat` and `rec_ver_tat`
+
+Create a new column using the mutate() function that contains the total TAT. Hint: The total TAT is the sum of `col_rec_tat` and `rec_ver_tat`
 
 ```{r Your Turn 6, eval=FALSE}
 mutate(biochem, total_tat = 60*(col_rec_tat + rec_ver_tat)) 
@@ -103,21 +106,21 @@ tat_outliers <- biochem %>%
 
 ## Your Turn 4
 
-Use `%>%` in the following chunk to write a sequence of functions that: 
+Use `%>%` in the following chunk to write a sequence of functions that:
 
-1. Filters to tests from the patient type (`pat_type`) of "cancer center"
+1.  Filters to tests from the patient type (`pat_type`) of "cancer center"
 
-2. Adds a column with the total turnaround time (sum of `col_rec_tat` and `rec_ver_tat`)
+2.  Adds a column with the total turnaround time (sum of `col_rec_tat` and `rec_ver_tat`)
 
-3. Filters to include only the rows with a calculated turnaround time greater than 10 hours
+3.  Filters to include only the rows with a calculated turnaround time greater than 1 hour
 
-Using "<-", assign the result to a new variable, call it whatever you want.
+Using "\<-", assign the result to a new variable, call it whatever you want.
 
 ```{r your_turn_4, eval=FALSE}
 cc_outliers <- biochem %>% 
   filter(pat_type == "cancer center")%>% # filter to the pat_type with the name "cancer center"
   mutate(total_tat = col_rec_tat + rec_ver_tat) %>% # calculate total turnaround time
-  filter(total_tat > 0.5)    # filter only turnaround time greater than 10 hours
+  filter(total_tat > 1)    # filter only turnaround time greater than 10 hours
 cc_outliers
 ```
 
@@ -125,8 +128,8 @@ cc_outliers
 
 Use your mouse to select the name of the new data frame from the list of objects in the Environment tab in the upper-right pane of Rstudio. Answer the following questions:
 
-- What is the typical TAT for the Cancer Center?
-- Given this data, does it appear that there is a chronic problem in TAT for the Cancer Center, or was this test an outlier?
+-   What is the typical TAT for the Cancer Center?
+-   Given this data, does it appear that there is a chronic problem in TAT for the Cancer Center, or was this test an outlier?
 
 # What else?
 
@@ -139,7 +142,7 @@ select(biochem, -mrn, -last_name) # select columns to remove
 
 ### Bonus Your Turn - select
 
-A. Alter the code to select just the `last_name` column. Assign the result to `biochem_2a` and show the resulting data frame by executing the following line with just the name of the object: `biochem_2a` 
+A. Alter the code to select just the `last_name` column. Assign the result to `biochem_2a` and show the resulting data frame by executing the following line with just the name of the object: `biochem_2a`
 
 ```{r your_turn_select_a, eval=FALSE}
 # Remove the "_______" and replace it with your answer
@@ -179,7 +182,7 @@ arrange(biochem, desc(mrn))  #Sort from largest to smallest MRN
 
 The column `value` contains the reported result for each test result.
 
-How might you use arrange() to determine the highest and lowest Sodium result in the dataset? (Hint: Try filtering all `sodium_mmol_l` tests and then using arrange on the `value` column.) 
+How might you use arrange() to determine the highest and lowest Sodium result in the dataset? (Hint: Try filtering all `sodium` tests and then using arrange on the `value` column.)
 
 ```{r your_turn_arrange, eval=FALSE}
 #replace the ____ with the name of the column you would like to arrange the dataframe by.
@@ -203,8 +206,8 @@ arrange(toy_data,chars)
 
 # Take aways
 
-* Extract variables with `select()`  
-* Extract cases with `filter()`  
-* Arrange cases, with `arrange()`  
-* Make new variables, with `mutate()`  
-* Connect operations with `%>%`  
+-   Extract variables with `select()`\
+-   Extract cases with `filter()`\
+-   Arrange cases, with `arrange()`\
+-   Make new variables, with `mutate()`\
+-   Connect operations with `%>%`

@@ -30,7 +30,8 @@ ggplot(data = biochem) +
 ```{r}
 biochem %>%
   select(mrn, alkaline_phosphatase) %>%
-	summarize(test_count = n()) 
+	summarize(test_count = n(),
+	          mean_alp = mean(alkaline_phosphatase))
 
 ```
 
@@ -38,13 +39,13 @@ biochem %>%
 
 Fill in gaps in code below to:
 
-a)  Calculate the median alkaline phosphatase concentration and average calcium concentration.
+a)  Calculate the median alkaline phosphatase ("alkaline_phosphatase") concentration and average calcium ("total_calcium") concentration.
 
 ```{r}
 stats_1a <- biochem %>%
 	summarize(test_count = n(),
-	          mean_alp = median(alkaline_phosphatase),
-	          mean_ca = mean(total_calcium))
+	          mean_alp = median(_________________),
+	          mean_ca = mean(_____________))
 stats_1a
 ```
 
@@ -55,8 +56,8 @@ stats_1b <- biochem %>%
 	summarize(test_count = n(),
 	          median_alp = median(alkaline_phosphatase),
 	          mean_ca = mean(total_calcium),
-	          iqr_alp = IQR(alkaline_phosphatase),
-	          sd_ca = sd(total_calcium))
+	          iqr_alp = ___(alkaline_phosphatase),
+	          sd_ca = __(total_calcium))
 stats_1b
 ```
 ## Other examples of summarize
@@ -68,6 +69,7 @@ stats_1c <- biochem %>%
 	          var_alp = var(alkaline_phosphatase),
 	          cv_alp = 100*sd(alkaline_phosphatase)/mean(alkaline_phosphatase))
 
+stats_1c
 ```
 
 
@@ -99,7 +101,7 @@ a)  Calculate the median alkaline phosphatase concentration for Men and Women
 
 ```{r, eval=FALSE}
 biochem %>%
-  group_by(gender) %>%
+  ________(______) %>%
   summarize(median_alp = median(alkaline_phosphatase))
 ```
 
@@ -108,43 +110,55 @@ b)  (*Extra*) Calculate the median alkaline phosphatase concentration in Men and
 ```{r, eval=FALSE}
 biochem %>%
   group_by(gender) %>%
-  filter(age > 51) %>%
+  ______(___ > __) %>%
   summarize(median_alp = median(alkaline_phosphatase))
 ```
 
 ## What else
 
+###Basic Statistical Testts
+```{r}
+#filter males over 51
+biochem_male <- biochem %>%
+  filter(gender == "Male" & age >51)
+
+#filter females over 51
+biochem_female <- biochem %>%
+  filter(gender == "Female" & age > 51)
+
+#create variables for alkaline phosphatase
+alp_male <- biochem_male$alkaline_phosphatase
+alp_female <- biochem_female$alkaline_phosphatase
+
+#perform unpaired wilkoxon rank sum test
+wilcox.test(alp_male, alp_female, paired=FALSE)
+```
+
 ### Linear Regression
 
 ```{r}
+#creates linear regression model
 lm.model <- lm(blood_urea_nitrogen ~ creatinine + aspartate_aminotransferase, biochem)
 summary(lm.model)
 
+#scatterplot of creatinine vs. BUN
 ggplot(biochem, aes(creatinine, blood_urea_nitrogen)) +
   geom_point() +
   xlim(0,3) + 
   ylim(0,50)+
   geom_smooth(method="lm", se=FALSE, color="red", formula = y ~ x)
 
+#scatterplot of AST vs. BUN
+ggplot(biochem, aes(aspartate_aminotransferase, blood_urea_nitrogen)) +
+  geom_point() +
+  xlim(0,300) + 
+  ylim(0,50)+
+  geom_smooth(method="lm", se=FALSE, color="red", formula = y ~ x)
+
+#report model coefficients
 lm.model$coefficients
+
+#report confidence of model coefficients
 confint(lm.model)
 
-```
-
-### Logistic Regression
-
-```{r}
-##converting to F and M to 1 and 0
-biochem2 <- biochem %>%
-  mutate(gender2 = ifelse(gender == "Female", 1, 0)) %>%
-  filter(age > 51) %>%
-  select(-mrn, -pregnancy_status_at_exam, -age, -collect_dt, -receive_dt, -verify_dt, -pat_type, -payor_groups, -last_name, -col_rec_tat, -rec_ver_tat, -gender)
-  
-
-lr.model <- glm(gender2 ~ alkaline_phosphatase + alanine_aminotransferase + aspartate_aminotransferase + gamma_glutamyl_transferase,  	# model formula
-               data = biochem2,                           	# dataset
-               family = "binomial"                    # type of model
-  )
-summary(lr.model)
-exp(coefficients(lr.model))  					                # odds
 ```

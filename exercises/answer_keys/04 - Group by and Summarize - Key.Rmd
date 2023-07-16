@@ -1,0 +1,165 @@
+---
+title: "Statistical Analysis in R"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+## Setup
+
+```{r setup}
+## remove all user defined objects in your workspace
+rm(list=ls())
+
+library(tidyverse)  # Provides functions used throughout this session
+
+biochem <- read_csv("biochem_wide.csv")
+```
+
+## Summarize
+
+### What is the distribution of Alkaline Phosphatase results?
+
+```{r}
+ggplot(data = biochem) +
+  geom_histogram(aes(x = alkaline_phosphatase), binwidth = 1)
+```
+
+### Summarize the total number of of alkaline phosphatase results.
+
+```{r}
+biochem %>%
+  select(mrn, alkaline_phosphatase) %>%
+	summarize(test_count = n(),
+	          mean_alp = mean(alkaline_phosphatase)) 
+
+```
+
+## Your Turn 1
+
+Fill in gaps in code below to:
+
+a)  Calculate the median alkaline phosphatase ("alkaline_phosphatase") concentration and average calcium ("total_calcium") concentration.
+
+```{r}
+stats_1a <- biochem %>%
+	summarize(test_count = n(),
+	          mean_alp = median(alkaline_phosphatase),
+	          mean_ca = mean(total_calcium))
+stats_1a
+```
+
+b)  Calculate the interquartile range for alkaline phosphatase and the standard deviation for calcium. The function for interquartile range is "IQR" and for standard deviation is "sd"
+
+```{r}
+stats_1b <- biochem %>%
+	summarize(test_count = n(),
+	          median_alp = median(alkaline_phosphatase),
+	          mean_ca = mean(total_calcium),
+	          iqr_alp = IQR(alkaline_phosphatase),
+	          sd_ca = sd(total_calcium))
+stats_1b
+```
+## Other examples of summarize
+```{r}
+stats_1c <- biochem %>%
+  summarize(test_count = n(),
+	          lower95_alp = quantile(alkaline_phosphatase, 0.025),
+            upper95_alp = quantile(alkaline_phosphatase, 0.975),
+	          var_alp = var(alkaline_phosphatase),
+	          cv_alp = 100*sd(alkaline_phosphatase)/mean(alkaline_phosphatase))
+
+stats_1c
+```
+
+
+## Your Turn 2
+
+Consider: How would you calculate the total number of tests performed by patient gender?
+
+## group_by
+
+```{r}
+biochem %>%
+  select(mrn, gender, pat_type) %>%
+  group_by(gender, pat_type)
+```
+
+## group_by %\>% summarize
+
+```{r}
+biochem %>%  
+	select(mrn, gender, alkaline_phosphatase) %>%
+  group_by(gender) %>%
+  summarize(test_count = n())
+
+```
+
+## Your Turn 3
+
+a)  Calculate the median alkaline phosphatase concentration for Men and Women
+
+```{r, eval=FALSE}
+biochem %>%
+  group_by(gender) %>%
+  summarize(median_alp = median(alkaline_phosphatase))
+```
+
+b)  (*Extra*) Calculate the median alkaline phosphatase concentration in Men and Women over 51
+
+```{r, eval=FALSE}
+biochem %>%
+  group_by(gender) %>%
+  filter(age > 51) %>%
+  summarize(median_alp = median(alkaline_phosphatase))
+```
+
+## What else
+
+###Basic Statistical Testts
+```{r}
+#filter males over 51
+biochem_male <- biochem %>%
+  filter(gender == "Male" & age >51)
+
+#filter females over 51
+biochem_female <- biochem %>%
+  filter(gender == "Female" & age > 51)
+
+#create variables for alkaline phosphatase
+alp_male <- biochem_male$alkaline_phosphatase
+alp_female <- biochem_female$alkaline_phosphatase
+
+#perform unpaired wilkoxon rank sum test
+wilcox.test(alp_male, alp_female, paired=FALSE)
+```
+
+
+### Linear Regression
+
+```{r}
+#creates linear regression model
+lm.model <- lm(blood_urea_nitrogen ~ creatinine + aspartate_aminotransferase, biochem)
+summary(lm.model)
+
+#scatterplot of creatinine vs. BUN
+ggplot(biochem, aes(creatinine, blood_urea_nitrogen)) +
+  geom_point() +
+  xlim(0,3) + 
+  ylim(0,50)+
+  geom_smooth(method="lm", se=FALSE, color="red", formula = y ~ x)
+
+#scatterplot of AST vs. BUN
+ggplot(biochem, aes(aspartate_aminotransferase, blood_urea_nitrogen)) +
+  geom_point() +
+  xlim(0,300) + 
+  ylim(0,50)+
+  geom_smooth(method="lm", se=FALSE, color="red", formula = y ~ x)
+
+#report model coefficients
+lm.model$coefficients
+
+#report confidence of model coefficients
+confint(lm.model)
+
+```

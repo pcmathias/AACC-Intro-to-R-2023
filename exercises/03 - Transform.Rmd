@@ -26,25 +26,25 @@ How can you confirm that you have successfully loaded the data file into Rstudio
 
 ```{r}
 # Filters the biochem testing dataset to just rows in which the mrn column is equal to 111900
-filter(biochem, mrn == 121444)
+filter(_______, mrn == ______)
 ```
 
 ```{r}
 # Filters the biochem testing dataset to just rows in which the last_name column is equal to "maxwell"
-filter(biochem, last_name=="maxwell")
+filter(_______, last_name=="_______")
 ```
 
 ## Your Turn 2
 
 Use the 3 code blocks below, and `filter()`, to show how you would filter the `biochem` dataset.
 
-A. You are wanting to confirm a reference interval for women over 50 for alkaline phophatase. Find every alkaline phosphatase test for female patients aged 50 and over. The column in which age is found is named `age`, gender is found in `gender` and test is in `test`. Assign the new data frame to the object `biochem_3a`.
+A. You are wanting to confirm a reference interval for women over 50 for alkaline phophatase. Find every "alkaline_phosphatase" test for "Female" patients aged 50 and over. The column in which age is found is named `age`, gender is found in `gender` and test is in `test`. Assign the final new data frame to the object `biochem_3a`.
 
 ```{r Your Turn 3a, eval=FALSE}
 #replace the ____ with a logical statement identifying tests for patients greater than 50
-biochem_3a_1 <- filter(biochem, age >= 50) 
-biochem_3a_2 <- filter(biochem_3a_1, test == "alkaline_phosphatase")
-biochem_3a <- filter(biochem_3a_2, gender == "Female")
+biochem_3a_1 <- filter(biochem, age ___ 50) 
+biochem_3a_2 <- filter(biochem_3a_1, _______ "alkaline_phosphatase")
+biochem_3a <- filter(biochem_3a_2, _________________)
 biochem_3a
 ```
 
@@ -52,7 +52,7 @@ B. We also would only like to include outpatients? Find all of the alkaline phos
 
 ```{r Your Turn 3b, eval=FALSE}
 #replace the ____ with a logical statement identifying tests for patients with demo_group equal to "client"
-biochem_3b <- filter(biochem_3a, pat_type == "outpatient")
+biochem_3b <- filter(__________, ________ __ ____________)
 biochem_3b
 ```
 
@@ -61,7 +61,7 @@ biochem_3b
 We may have some data anomalies in the data set. Find all of the biochemistry testing where the patient class (column `pat_type`) is not entered. In these cases the value will be NA. NA stands for "not available". It is the way that R codes missing values. [Hint: See slide titled "Logical Tests"]
 
 ```{r Your Turn 3c, eval=FALSE}
-biochem_3c <- filter(biochem, is.na(pat_type))
+biochem_3c <- filter(_______, is.na(________))
 biochem_3c
 ```
 
@@ -69,15 +69,15 @@ biochem_3c
 
 ```{r}
 # The following code creates a data frame with a new column called c_r_tat_mins which contains the collect to receive TAT quantified in minutes.
-mutate(biochem, c_r_tat_mins = col_rec_tat*60)
+mutate(biochem, c_r_tat_mins = col_rec_tat*__)
 ```
 
 ## Your Turn 3
 
-Create a new column using the mutate() function that contains the total TAT. Hint: The total TAT is the sum of `col_rec_tat` and `rec_ver_tat`
+Create a new column using the mutate() function that contains the total TAT in minutes. Hint: The total TAT is the sum of `col_rec_tat` and `rec_ver_tat`
 
 ```{r Your Turn 6, eval=FALSE}
-mutate(biochem, total_tat = 60*(col_rec_tat + rec_ver_tat)) 
+mutate(biochem, total_tat = __*(___________ _ ___________)) 
 ```
 
 ## Replace a column with `mutate()`
@@ -90,17 +90,17 @@ mutate(biochem, mrn = as.character(mrn))
 
 ```{r Steps and the pipe}
 # These 3 lines of code are an example of the how we would accomplish a multi-step analysis based on what we've learned so far. 
-tat_outliers <- filter(biochem, pat_type == 'inpatient')
-tat_outliers <- mutate(tat_outliers, total_tat = 60*col_rec_tat + 60*rec_ver_tat)
-tat_outliers <- filter(tat_outliers, total_tat > 45)
+tat_outliers_1 <- filter(biochem, pat_type == 'cancer center')
+tat_outliers_2 <- mutate(tat_outliers_1, total_tat = col_rec_tat + rec_ver_tat)
+tat_outliers <- filter(tat_outliers_2, total_tat > 2)
 
 # vs
 
 # This code accomplishes the same task with less code
-tat_outliers <- biochem %>% 
-	filter(pat_type == 'inpatient') %>% 
-	mutate(total_tat = 60*col_rec_tat + 60*rec_ver_tat) %>%   
-	filter(total_tat > 60)
+tat_outliers_pipe <- biochem %>% 
+	filter(pat_type == 'cancer center') %>% 
+	mutate(total_tat = col_rec_tat + rec_ver_tat) %>%   
+	filter(total_tat > 2)
 
 ```
 
@@ -108,19 +108,23 @@ tat_outliers <- biochem %>%
 
 Use `%>%` in the following chunk to write a sequence of functions that:
 
-1.  Filters to tests from the patient type (`pat_type`) of "cancer center"
+1.  Filters to tests from the patient type (`pat_type`) of "icu"
 
 2.  Adds a column with the total turnaround time (sum of `col_rec_tat` and `rec_ver_tat`)
 
-3.  Filters to include only the rows with a calculated turnaround time greater than 1 hour
+3.  Filters to include only the rows with a calculated turnaround time greater than 2 hour
+
+4. Filter to include only rows that have a phosphorus result
 
 Using "\<-", assign the result to a new variable, call it whatever you want.
 
 ```{r your_turn_4, eval=FALSE}
 cc_outliers <- biochem %>% 
-  filter(pat_type == "cancer center")%>% # filter to the pat_type with the name "cancer center"
-  mutate(total_tat = col_rec_tat + rec_ver_tat) %>% # calculate total turnaround time
-  filter(total_tat > 1)    # filter only turnaround time greater than 10 hours
+  ______(________ __ _____)%>% # filter to the pat_type with the name "icu"
+  mutate(total_tat = col_rec_tat + rec_ver_tat) ___ # calculate total turnaround time
+  filter(_________ _ _) %>%    # filter only turnaround time greater than 2 hours
+  filter( ___ __ "phosphorus") # filter for phosphorus results
+
 cc_outliers
 ```
 
@@ -128,8 +132,8 @@ cc_outliers
 
 Use your mouse to select the name of the new data frame from the list of objects in the Environment tab in the upper-right pane of Rstudio. Answer the following questions:
 
--   What is the typical TAT for the Cancer Center?
--   Given this data, does it appear that there is a chronic problem in TAT for the Cancer Center, or was this test an outlier?
+-   What is the typical TAT for the ICU?
+-   Given this data, does it appear that there is a chronic problem in TAT for the ICU, or was this test an outlier?
 
 # What else?
 
@@ -138,15 +142,16 @@ Use your mouse to select the name of the new data frame from the list of objects
 ```{r select}
 select(biochem, mrn, last_name)   # select columns to keep
 select(biochem, -mrn, -last_name) # select columns to remove 
+select(biochem, MRN = mrn, age, last_name) # select columns and rename one
 ```
 
 ### Bonus Your Turn - select
 
-A. Alter the code to select just the `last_name` column. Assign the result to `biochem_2a` and show the resulting data frame by executing the following line with just the name of the object: `biochem_2a`
+A. Alter the code to select just the `payor_groups` column. Assign the result to `biochem_2a` and show the resulting data frame by executing the following line with just the name of the object: `biochem_2a`
 
 ```{r your_turn_select_a, eval=FALSE}
 # Remove the "_______" and replace it with your answer
-biochem_2a <- select(biochem, last_name)
+biochem_2a <- ______(_______, ____________)
 biochem_2a
 ```
 
@@ -154,8 +159,8 @@ B. If you have time, alter this line of code and see if you can select all colum
 
 ```{r your_turn_select_b, eval=FALSE}
 # Remove the "_______" and replace it with your answer
-biochem_2b <- select(biochem, -last_name)
-biochem_2b
+__________ <- ______(_______, __________)
+__________
 ```
 
 ### Select Bonus Challenge (only if you have time)
@@ -187,9 +192,9 @@ How might you use arrange() to determine the highest and lowest Sodium result in
 ```{r your_turn_arrange, eval=FALSE}
 #replace the ____ with the name of the column you would like to arrange the dataframe by.
 biochem_sodium <- biochem %>%
-  filter(test == "sodium") %>%
-  select(value) %>%
-  arrange(value) 
+  filter(____ __ ________) %>%
+  ______(value) %>%
+  arrange(_____) 
 head(biochem_sodium)
 ## head returns the first 6 results in the dataframe
 tail(biochem_sodium)

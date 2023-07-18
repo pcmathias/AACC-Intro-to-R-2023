@@ -45,7 +45,7 @@ All of the course instructors have previous experience implementing and executin
 -   Greg Wilson's [Teaching Tech Together](http://teachtogether.tech/en/), which offers practical advice about teaching programming.
 -   Claus Wilke's [Fundamentals of Data Visualization](https://serialmentor.com/dataviz/), a compendium of Do's and Don'ts of data visualization.
 -   Method validation and some other content has been borrowed from the [basic R course at AACC](https://github.com/pcmathias/AACC-Introduction-to-R)
--   Stephan Kadauke MD PhD and Dan Herman MD PhD who helped develop the content.
+-   Stephan Kadauke MD PhD, Joseph Rudolph MD, and Dan Herman MD PhD who helped develop the content.
 
 Shield: [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
 

@@ -142,7 +142,7 @@ all_stats
 ```
 ## What else
 
-###Basic Statistical Testts
+###Basic Statistical Tests
 ```{r}
 #filter males over 51
 biochem_male <- biochem %>%

@@ -30,6 +30,12 @@ The workshop is scheduled to begin on Sunday, July 23, 2023 at 8:30AM Pacific Ti
 
 We will be utilizing our own cloud based RStudio instance in the workshop. However, *in the long term*, you will need R and RStudio installed **on your own computer** in order to work on private data. You can find step by step instructions for installing these on macOS ([here](https://www.youtube.com/watch?v=GM88tYlEy_g)) or Windows ([here](https://www.youtube.com/watch?v=JRKmZK5-6aE)).
 
+## R Cheat Sheets
+
+-   R Studio --\> Help --\> Cheat Sheets
+
+-   <https://posit.co/resources/cheatsheets/>
+
 ## Acknowledgments
 
 All of the course instructors have previous experience implementing and executing R workshops at a variety of venues. The workshop we are presenting for the API community is in many ways a product of these past experiences. The workshop also integrates content, best practices, and lessons from a variety of educators in the R community. We would like to specifically acknowledge:

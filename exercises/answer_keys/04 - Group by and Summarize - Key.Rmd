@@ -14,6 +14,7 @@ rm(list=ls())
 library(tidyverse)  # Provides functions used throughout this session
 
 biochem <- read_csv("biochem_wide.csv")
+
 ```
 
 ## Summarize
@@ -73,8 +74,6 @@ stats_1c
 ```
 
 
-## Your Turn 2
-
 Consider: How would you calculate the total number of tests performed by patient gender?
 
 ## group_by
@@ -88,14 +87,15 @@ biochem %>%
 ## group_by %\>% summarize
 
 ```{r}
-biochem %>%  
+gend_cnt <- biochem %>%  
 	select(mrn, gender, alkaline_phosphatase) %>%
   group_by(gender) %>%
   summarize(test_count = n())
+gend_cnt
 
 ```
 
-## Your Turn 3
+## Your Turn 2
 
 a)  Calculate the median alkaline phosphatase concentration for Men and Women
 
@@ -105,13 +105,37 @@ biochem %>%
   summarize(median_alp = median(alkaline_phosphatase))
 ```
 
-b)  (*Extra*) Calculate the median alkaline phosphatase concentration in Men and Women over 51
+b)  Calculate the median alkaline phosphatase concentration in Men and Women over 51
 
 ```{r, eval=FALSE}
 biochem %>%
   group_by(gender) %>%
   filter(age > 51) %>%
   summarize(median_alp = median(alkaline_phosphatase))
+```
+
+## Joining Multiple Dataframes Together
+I want to add the total number of Males and Females to each row of the biochemistry dataset.
+```{r}
+left_example <- left_join(biochem, gend_cnt, by="gender")
+left_example
+
+right_example <- right_join(biochem, gend_cnt, by="gender")
+right_example
+
+inner_example <- inner_join(biochem, gend_cnt, by="gender")
+inner_example
+
+full_example <- full_join(biochem, gend_cnt, by="gender")
+full_example
+```
+## Your turn
+Use the approriate join command to combine the stats_1b dataframe and stats_1c dataframe using the test_count column.
+
+```{r}
+all_stats <- left_join(stats_1b, stats_1c, by="test_count")
+all_stats
+
 ```
 
 ## What else
@@ -161,5 +185,18 @@ lm.model$coefficients
 
 #report confidence of model coefficients
 confint(lm.model)
+
+```
+
+## Your turn!
+Perform a linear regression of Alkaline Phosphatase as a function of gender and age. What happens when you perform a linear regerssion with a categorical variable?
+```{r}
+lm.alk <- lm(alkaline_phosphatase ~ gender + age, biochem)
+
+summary(lm.alk)
+
+lm.alk$coefficients
+
+confint(lm.alk)
 
 ```

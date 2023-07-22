@@ -51,7 +51,7 @@ biochem_3a
 B. We also would only like to include outpatients? Find all of the alkaline phosphtase testing where the patient type (`pat_type`) is equal to "outpatient". Assign the new data frame to the object `biochem_3b`.
 
 ```{r Your Turn 3b, eval=FALSE}
-#replace the ____ with a logical statement identifying tests for patients with demo_group equal to "client"
+#replace the ____ with a logical statement identifying tests for patients with demo_group equal to "outpatient"
 biochem_3b <- filter(__________, ________ __ ____________)
 biochem_3b
 ```

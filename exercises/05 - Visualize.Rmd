@@ -23,7 +23,7 @@ count(biochem, test)
 Create an data frame *k_data* that includes only the potassium observations. Use the `summary()` function to review the potassium data.
 
 ```{r}
-k_data <- biochem |> 
+k_data <- biochem %>% 
   filter(_______)
 summary(k_data)
 ```
@@ -31,7 +31,7 @@ summary(k_data)
 Create a data frame *lyte_data* that includes observations from the electrolytes in a basic metabolic panel (sodium, potassium, chloride, bicarbonate). Recall that you can match on a list using the `%in%` operator and a list of items using the `c()` function: `variable %in% c('item1', 'item2')`. Review the contents of the lyte_data data frame to confirm that you have captured the results of interest. 
 
 ```{r}
-lyte_data <- biochem |> 
+lyte_data <- biochem %>% 
   filter(______ %in% _______)
 View(lyte_data)
 ```
@@ -74,11 +74,6 @@ Fill in the blanks and run the code to create the plot.
 ```{r}
 ggplot(data = ______) +
   ______(mapping = aes(x = ______))
-```
-
-```{r}
-ggplot(data = k_data) +
-  geom_histogram(aes(x = value))
 ```
 
 When you run this code, you will most likely have what looks like an error displayed above the graph:
@@ -169,7 +164,7 @@ Recall that we made a data frame that contains all of the electrolyte data *lyte
 ```{r}
 ggplot(data = lyte_data) +
   geom_histogram(mapping = aes(x = value)) +
-  facet_grid(cols = vars(test), rows = vars(gender), scales = "free")
+  facet_grid(cols = ______, rows = ______, ______)
 ```
 
 The histogram shapes have some irregularities. Why might that be? How can you modify the plot to provide a better visualization? Consider that each of the analytes has a different measurement range. What option(s) for your geom function can you use to handle these disparate values?
